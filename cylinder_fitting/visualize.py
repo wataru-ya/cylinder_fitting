@@ -46,8 +46,14 @@ def show_fit(w_fit, C_fit, r_fit, Xs):
 
     # Plot the cylinder surface
 
+    M_inv = np.linalg.inv(M)
+    Xs_r = np.array([(np.dot(M_inv, x)) for x in Xs])
+
+    l_z = np.ptp(Xs_r, axis=0)[2]
+    ex = 0.3
+
     delta = np.linspace(-np.pi, np.pi, 20)
-    z = np.linspace(-10, 10, 20)
+    z = np.linspace(-l_z / 2.0 * (1 + ex), l_z / 2.0 * (1 + ex), 20)
 
     Delta, Z = np.meshgrid(delta, z)
     X = r_fit * np.cos(Delta)
@@ -60,6 +66,8 @@ def show_fit(w_fit, C_fit, r_fit, Xs):
             X[i][j] = p[0]
             Y[i][j] = p[1]
             Z[i][j] = p[2]
+
+    ax.set_box_aspect((np.ptp(X), np.ptp(Y), np.ptp(Z)))
 
     ax.plot_surface(X, Y, Z, alpha=0.2)
 
